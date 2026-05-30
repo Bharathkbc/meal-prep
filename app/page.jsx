@@ -1,6 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect  } from "react"
+
+const storyImages = [
+
+  "/fat.png" ,
+  "/fit.png"
+]
 
 const ACTIVITY_MULTIPLIERS = {
   sedentary: 1.2,
@@ -50,13 +56,24 @@ function SectionHeader({ eyebrow, title, subtitle }) {
   return (
     <div className="mx-auto mb-14 max-w-4xl text-center">
       <p className="text-sm font-semibold uppercase tracking-[0.25em] text-green-400">{eyebrow}</p>
-      <h2 className="mt-5 text-4xl font-bold leading-tight md:text-6xl">{title}</h2>
+      <h2 className="mt-5 text-3xl font-bold leading-tight md:text-3xl">{title}</h2>
       <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-zinc-400">{subtitle}</p>
     </div>
   )
 }
 
 function IntroSection({ onStart }) {
+      const storyImages = ["/fat.png" , "/fit.png"]
+      const [currentImage, setCurrentImage] = useState(0)
+
+      useEffect(() => {
+        const timer = setInterval(() => {
+          setCurrentImage((prev) => (prev + 1) % storyImages.length)
+        }, 1500)
+
+        return () => clearInterval(timer)
+      }, [])
+
   return (
     <section className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-zinc-950 to-black px-6 py-20 text-center">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,197,94,0.16),transparent_42%)]" />
@@ -73,28 +90,46 @@ function IntroSection({ onStart }) {
         </nav>
 
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-green-400">
-          Personalized Meal Subscriptions For India
+          Personalized Meal Subscriptions
         </p>
 
-        <h1 className="mx-auto mt-8 max-w-6xl text-5xl font-black leading-tight md:text-7xl xl:text-8xl">
+        <h1 className="mx-auto mt-8 max-w-6xl text-3xl font-black leading-tight md:text-4xl xl:text-4xl">
           Eat For Your
           <span className="text-green-400"> Dream Physique.</span>
           <br />
           Not Just Hunger.
-        </h1>
+             </h1>
+               <div className="mx-auto mt-12 max-w-6xl overflow-hidden rounded-3xl border border-zinc-800 shadow-2xl">
+                        {/* <img
+                           src="/Story1.png"
+                           alt="ABS Pursuit fitness journey"
+                           className="w-full"
+                         /> */}
+                       </div>
 
-        <p className="mx-auto mt-10 max-w-4xl text-lg leading-relaxed text-zinc-300 md:text-2xl">
+        <p className="mx-auto mt-10 max-w-4xl text-lg leading-relaxed text-zinc-200 md:text-2xl">
           Most people spend thousands every month on food, but still miss protein, eat oily meals, and lose time cooking. We design your meals around your calories, protein, goal, and lifestyle — then deliver them to your doorstep.
         </p>
+        <h2 className="mt-12 text-3xl font-bold text-green-400">
+          Why ABS Pursuit?
+        </h2>
 
-        <div className="mx-auto mt-14 grid max-w-6xl gap-5 md:grid-cols-4">
+
+
+              <img
+        src={storyImages[currentImage]}
+        alt="ABS Pursuit journey"
+        className="mx-auto w-1/2 rounded-3xl shadow-2xl"
+      />
+
+        <div className="mx-auto mt-14 grid max-w-7xl gap-5 md:grid-cols-4">
           {[
             ["Protein Gap", "Many Indian diets are carb-heavy and low in protein."],
             ["No Cooking", "Save daily time spent shopping, cooking, and cleaning."],
             ["Goal-Based", "Calories and protein matched to your fitness target."],
             ["Doorstep", "Fresh meals delivered weekly or monthly."],
           ].map(([title, copy]) => (
-            <div key={title} className="rounded-3xl border border-zinc-800 bg-black/70 p-6 backdrop-blur-sm">
+            <div key={title} className="rounded-2xl border border-zinc-800 bg-black/70 p-6 backdrop-blur-sm">
               <h3 className="text-2xl font-bold text-green-400">{title}</h3>
               <p className="mt-3 leading-relaxed text-zinc-300">{copy}</p>
             </div>
@@ -127,8 +162,8 @@ function IntroSection({ onStart }) {
           </div>
         </div>
 
-        <div className="mx-auto mt-16 max-w-5xl rounded-3xl bg-green-500 p-8 text-black shadow-2xl md:p-10">
-          <h2 className="text-4xl font-black leading-tight md:text-5xl">Follow The Plan. See The Results.</h2>
+        <div className="mx-auto mt-12 max-w-4xl rounded-2xl bg-green-500 p-8 text-black shadow-2xl md:p-10">
+          <h2 className="text-3xl font-black leading-tight md:text-3xl">Follow The Plan. See The Results.</h2>
           <p className="mx-auto mt-6 max-w-4xl text-xl leading-relaxed opacity-90">
             We won’t sell random food. We help customers eat consistently according to their body goal. Results depend on consistency, workouts, sleep, and personal health conditions.
           </p>
@@ -232,10 +267,10 @@ function PlanBuilderSection() {
           subtitle="Customer enters body details. We calculate estimated calories, protein target, meal split, and weekly/monthly pricing."
         />
 
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl md:p-10">
-            <h3 className="text-3xl font-bold">Customer Details</h3>
-            <p className="mt-3 text-zinc-400">These details help create a more accurate plan.</p>
+        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-1xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl md:p-10">
+            <h3 className="text-2xl font-bold">Customer Details</h3>
+            <p className="mt-2 text-zinc-400">These details help create a more accurate plan.</p>
 
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               <SelectField label="Gender" name="gender" value={formData.gender} onChange={handleChange} options={["male", "female"]} />
@@ -316,12 +351,12 @@ function PlanBuilderSection() {
             <div className="mt-8 grid gap-6 md:grid-cols-2">
               <div className="rounded-3xl bg-black p-6 text-white">
                 <p className="text-zinc-400">Calories</p>
-                <h4 className="mt-2 text-5xl font-black">{plan.calories}</h4>
+                <h4 className="mt-2 text-4xl font-black">{plan.calories}</h4>
                 <p className="mt-2 text-zinc-400">kcal/day</p>
               </div>
               <div className="rounded-3xl bg-black p-6 text-white">
                 <p className="text-zinc-400">Protein</p>
-                <h4 className="mt-2 text-5xl font-black">{plan.protein}g</h4>
+                <h4 className="mt-2 text-4xl font-black">{plan.protein}g</h4>
                 <p className="mt-2 text-zinc-400">per day</p>
               </div>
             </div>
@@ -390,7 +425,7 @@ function PlanBuilderSection() {
             <div className="mt-10 grid gap-6 md:grid-cols-2">
               <div className="rounded-3xl border border-zinc-800 bg-black p-8">
                 <p className="text-sm uppercase tracking-wide text-zinc-400">Weekly Plan</p>
-                <h3 className="mt-4 text-5xl font-black text-green-400">₹{weeklyMeals * pricePerMeal}</h3>
+                <h3 className="mt-4 text-4xl font-black text-green-400">₹{weeklyMeals * pricePerMeal}</h3>
                 <p className="mt-3 text-zinc-300">{weeklyMeals} meals/week at ₹{pricePerMeal} per meal.</p>
 
                 <div className="mt-8 space-y-4 rounded-3xl border border-zinc-800 bg-zinc-950 p-6">
@@ -413,7 +448,7 @@ function PlanBuilderSection() {
 
               <div className="rounded-3xl bg-green-500 p-8 text-black shadow-2xl">
                 <p className="text-sm font-semibold uppercase tracking-wide">Monthly Plan</p>
-                <h3 className="mt-4 text-5xl font-black">₹{monthlyMeals * pricePerMeal}</h3>
+                <h3 className="mt-4 text-4xl font-black">₹{monthlyMeals * pricePerMeal}</h3>
                 <p className="mt-3 opacity-80">{monthlyMeals} meals/month at ₹{pricePerMeal} per meal.</p>
 
                 <div className="mt-8 space-y-4 rounded-3xl border border-black/20 bg-black/10 p-6 backdrop-blur-sm">
@@ -480,7 +515,7 @@ function SelectField({ label, name, value, onChange, options }) {
 
 function ProfessionalServicesSection() {
   return (
-    <section className="min-h-screen bg-zinc-950 px-6 py-24">
+    <section className="min-h-screen bg-zinc-750 px-4 py-24">
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           eyebrow="Step 3"
@@ -489,16 +524,16 @@ function ProfessionalServicesSection() {
         />
 
         <div className="grid gap-8 md:grid-cols-2">
-          <div className="rounded-3xl border border-zinc-800 bg-black p-8 shadow-xl">
-            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-500 bg-green-500/10 text-4xl">🏋️</div>
+          <div className="rounded-2xl border border-zinc-800 bg-black p-8 shadow-xl">
+            <div className="mb-6 flex h-15 w-15 items-center justify-center rounded-full border border-green-500 bg-green-500/10 text-2xl">🏋️</div>
             <p className="text-sm font-semibold uppercase tracking-wide text-green-400">Add-on Service</p>
-            <h3 className="mt-4 text-4xl font-bold">Licensed Fitness Coaching</h3>
+            <h3 className="mt-2 text-2xl font-bold">Licensed Fitness Coaching</h3>
             <p className="mt-5 text-lg leading-relaxed text-zinc-400">
               Customers can work with certified trainers for workout plans, form correction, progress tracking, and accountability.
             </p>
             <div className="mt-8 rounded-3xl bg-zinc-950 p-6">
               <p className="text-zinc-400">Starting From</p>
-              <h4 className="mt-2 text-4xl font-black text-green-400">₹1,999</h4>
+              <h4 className="mt-2 text-3xl font-black text-green-400">₹1,999</h4>
               <p className="mt-2 text-zinc-400">per month, optional add-on</p>
             </div>
             <button className="mt-8 rounded-2xl bg-green-500 px-8 py-4 font-bold text-black transition hover:bg-green-400">
@@ -509,13 +544,13 @@ function ProfessionalServicesSection() {
           <div className="rounded-3xl border border-zinc-800 bg-black p-8 shadow-xl">
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-500 bg-green-500/10 text-4xl">🥗</div>
             <p className="text-sm font-semibold uppercase tracking-wide text-green-400">Add-on Service</p>
-            <h3 className="mt-4 text-4xl font-bold">Speak With A Dietitian</h3>
+            <h3 className="mt-2 text-2xl font-bold">Speak With A Dietitian</h3>
             <p className="mt-5 text-lg leading-relaxed text-zinc-400">
               Customers can book certified dietitian consultations for personal health questions, medical restrictions, and advanced diet customization.
             </p>
             <div className="mt-8 rounded-3xl bg-zinc-950 p-6">
               <p className="text-zinc-400">Starting From</p>
-              <h4 className="mt-2 text-4xl font-black text-green-400">₹799</h4>
+              <h4 className="mt-2 text-3xl font-black text-green-400">₹799</h4>
               <p className="mt-2 text-zinc-400">per consultation, optional add-on</p>
             </div>
             <button className="mt-8 rounded-2xl bg-green-500 px-8 py-4 font-bold text-black transition hover:bg-green-400">
@@ -525,7 +560,7 @@ function ProfessionalServicesSection() {
         </div>
 
         <div className="mt-12 rounded-3xl bg-green-500 p-8 text-center text-black shadow-2xl md:p-10">
-          <h3 className="text-4xl font-black">Meals First. Experts When Needed.</h3>
+          <h3 className="text-3xl font-black">Meals First. Experts When Needed.</h3>
           <p className="mx-auto mt-5 max-w-4xl text-lg leading-relaxed opacity-90">
             This keeps the base meal plan affordable while giving serious customers access to professional fitness and nutrition support.
           </p>
@@ -539,6 +574,15 @@ export default function ProteinMealLanding() {
   const scrollToBuilder = () => {
     document.getElementById("builder")?.scrollIntoView({ behavior: "smooth" })
   }
+const [currentImage, setCurrentImage] = useState(0)
+
+useEffect(() => {
+  const timer = setInterval(() => {
+    setCurrentImage((prev) => (prev + 1) % storyImages.length)
+  }, 3000)
+
+  return () => clearInterval(timer)
+}, [])
 
   return (
     <div className="min-h-screen bg-black font-sans text-white">
