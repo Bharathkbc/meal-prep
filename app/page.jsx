@@ -193,13 +193,72 @@ function PlanBuilderSection() {
   })
 
   const [showResults, setShowResults] = useState(false)
+  const [showContactForm, setShowContactForm] = useState(false)
   const [showMealPlans, setShowMealPlans] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(null)
+  const [submitMessage, setSubmitMessage] = useState("")
+
+  const [contactData, setContactData] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    address: "",
+    pincode: "",
+  })
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value })
     setShowResults(false)
+    setShowContactForm(false)
     setShowMealPlans(false)
   }
+
+  const handleContactChange = (event) => {
+    setContactData({ ...contactData, [event.target.name]: event.target.value })
+  }
+
+  const handleSubmit = async () => {
+    setSubmitStatus("loading")
+    setSubmitMessage("")
+
+    const payload = {
+      name: contactData.fullName,
+      phone: contactData.phone,
+      email: contactData.email,
+      address: contactData.address,
+      pincode: contactData.pincode,
+      calories: plan.calories,
+      protein: plan.protein,
+      goal: formData.weightDirection,
+      mealPlan: plan.mealType,
+    }
+
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbzrLwmJEypCxelRNdzQ4yGlL6Dxmq11xlnbWf9nyleu4VZ2zVRBudMPJWwCzlqs1HAEig/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      )
+      setSubmitStatus("success")
+      setSubmitMessage("Your plan has been saved! We'll WhatsApp you shortly.")
+      setShowMealPlans(true)
+    } catch {
+      setSubmitStatus("error")
+      setSubmitMessage("Something went wrong. Please try again.")
+    }
+  }
+
+  const isContactComplete = Boolean(
+    contactData.fullName &&
+      contactData.phone &&
+      contactData.email &&
+      contactData.address &&
+      contactData.pincode,
+  )
 
   const isFormComplete = Boolean(
     formData.age &&
@@ -305,6 +364,7 @@ function PlanBuilderSection() {
                       onClick={() => {
                         setFormData({ ...formData, weightDirection: value })
                         setShowResults(false)
+                        setShowContactForm(false)
                         setShowMealPlans(false)
                       }}
                       className={`rounded-2xl border px-5 py-4 font-semibold transition ${
@@ -391,10 +451,114 @@ function PlanBuilderSection() {
 
             <button
               type="button"
-              onClick={() => setShowMealPlans(true)}
+              onClick={() => {
+                setShowContactForm(true)
+                setShowMealPlans(false)
+                setSubmitStatus(null)
+                setSubmitMessage("")
+              }}
               className="mt-8 rounded-2xl bg-black px-8 py-4 font-bold text-white transition hover:bg-zinc-900"
             >
               Continue To Meal & Pricing
+            </button>
+          </div>
+        )}
+
+        {showContactForm && isFormComplete && !showMealPlans && (
+          <div className="mt-10 rounded-3xl border border-zinc-800 bg-zinc-950 p-6 md:p-10">
+            <div className="mx-auto mb-10 max-w-4xl text-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-green-400">Almost There</p>
+              <h3 className="mt-5 text-3xl font-bold">Your Delivery Details</h3>
+              <p className="mx-auto mt-4 max-w-2xl text-zinc-400">
+                Enter your contact info so we can reach you with your custom meal plan and arrange delivery.
+              </p>
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-2">
+              <div>
+                <label className="text-sm text-zinc-400">Full Name</label>
+                <input
+                  name="fullName"
+                  value={contactData.fullName}
+                  onChange={handleContactChange}
+                  type="text"
+                  placeholder="Your full name"
+                  className="mt-2 w-full rounded-2xl border border-zinc-700 bg-black px-5 py-4 outline-none focus:border-green-400"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-zinc-400">Phone Number (WhatsApp)</label>
+                <input
+                  name="phone"
+                  value={contactData.phone}
+                  onChange={handleContactChange}
+                  type="tel"
+                  placeholder="+91 98765 43210"
+                  className="mt-2 w-full rounded-2xl border border-zinc-700 bg-black px-5 py-4 outline-none focus:border-green-400"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-zinc-400">Email Address</label>
+                <input
+                  name="email"
+                  value={contactData.email}
+                  onChange={handleContactChange}
+                  type="email"
+                  placeholder="you@example.com"
+                  className="mt-2 w-full rounded-2xl border border-zinc-700 bg-black px-5 py-4 outline-none focus:border-green-400"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-zinc-400">Pincode</label>
+                <input
+                  name="pincode"
+                  value={contactData.pincode}
+                  onChange={handleContactChange}
+                  type="text"
+                  placeholder="6-digit pincode"
+                  className="mt-2 w-full rounded-2xl border border-zinc-700 bg-black px-5 py-4 outline-none focus:border-green-400"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="text-sm text-zinc-400">Delivery Address</label>
+                <textarea
+                  name="address"
+                  value={contactData.address}
+                  onChange={handleContactChange}
+                  rows={3}
+                  placeholder="Flat / House no., Street, Area, City"
+                  className="mt-2 w-full resize-none rounded-2xl border border-zinc-700 bg-black px-5 py-4 outline-none focus:border-green-400"
+                />
+              </div>
+            </div>
+
+            {submitStatus === "success" && (
+              <div className="mt-6 rounded-2xl border border-green-500 bg-green-500/10 px-6 py-4 text-green-400">
+                {submitMessage}
+              </div>
+            )}
+
+            {submitStatus === "error" && (
+              <div className="mt-6 rounded-2xl border border-red-500 bg-red-500/10 px-6 py-4 text-red-400">
+                {submitMessage}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={!isContactComplete || submitStatus === "loading"}
+              className={`mt-6 w-full rounded-2xl px-8 py-4 text-lg font-bold transition ${
+                isContactComplete && submitStatus !== "loading"
+                  ? "bg-green-500 text-black hover:bg-green-400"
+                  : "cursor-not-allowed bg-zinc-800 text-zinc-500"
+              }`}
+            >
+              {submitStatus === "loading" ? "Submitting..." : "Submit & View Pricing"}
             </button>
           </div>
         )}
