@@ -30,17 +30,17 @@ function calculatePlan(formData) {
 
   const calories =
     formData.weightDirection === "lose"
-      ? Math.round(maintenanceCalories - 300)
+      ? Math.round(maintenanceCalories - 500)
       : formData.weightDirection === "gain"
         ? Math.round(maintenanceCalories + 300)
         : Math.round(maintenanceCalories)
 
   const protein =
-    formData.weightDirection === "gain"
-      ? Math.round(weight * 1.8)
-      : formData.weightDirection === "lose"
-        ? Math.round(weight * 1.6)
-        : Math.round(weight * 1.4)
+    formData.weightDirection === "lose"
+      ? Math.round(weight * 1.2)
+      : formData.weightDirection === "gain"
+        ? Math.round(weight * 1.4)
+        : Math.round(weight * 1.0)
 
   const mealType =
     formData.weightDirection === "lose"
